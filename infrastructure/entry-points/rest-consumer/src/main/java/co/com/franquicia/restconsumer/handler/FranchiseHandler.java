@@ -90,7 +90,8 @@ public class FranchiseHandler {
                         .build())
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
-                        .bodyValue(response)).onErrorResume(IllegalArgumentException.class, e ->
+                        .bodyValue(response))
+                .onErrorResume(IllegalArgumentException.class, e ->
                         ServerResponse.badRequest()
                                 .contentType(APPLICATION_JSON)
                                 .bodyValue(ErrorResponse.builder()

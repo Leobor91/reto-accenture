@@ -78,9 +78,9 @@ public class ProductRepositoryAdapter implements ProductGateway {
         return Mono.fromCallable(() -> repository.findTopStockByFranchise(franchiseId))
                 .flatMapMany(Flux::fromIterable)
                 .map(row -> TopStockProduct.builder()
-                        .branchId(row.getBranchId())
-                        .branchName(row.getBranchName())
-                        .productName(row.getProductName())
+                        .branchId(row.getBranch_id())
+                        .branchName(row.getBranch_name())
+                        .productName(row.getProduct_name())
                         .stock(row.getStock())
                         .build())
                 .subscribeOn(Schedulers.boundedElastic());

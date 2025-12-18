@@ -141,10 +141,18 @@ public class ProductHandler {
 
     public Mono<ServerResponse> getTopStockByFranchise(ServerRequest request) {
         Long franchiseId = Long.valueOf(request.pathVariable("franchiseId"));
-        return ServerResponse.ok()
-                .contentType(APPLICATION_JSON)
-                .body(getTopStockUseCase.execute(franchiseId),
-                        co.com.franquicia.model.product.TopStockProduct.class)
+        return getTopStockUseCase.execute(franchiseId)
+                .collectList()
+                .filter(topStockProducts -> !topStockProducts.isEmpty() && topStockProducts.size() > 0)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("No se encontraron productos con stock")))
+                .map(topStockProducts -> ApiResponse.builder()
+                        .status(200)
+                        .message("Top de productos con mayor stock por franquicia obtenido exitosamente.")
+                        .data(topStockProducts)
+                        .build())
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(APPLICATION_JSON)
+                        .bodyValue(response))
                 .onErrorResume(IllegalArgumentException.class, e ->
                         ServerResponse.badRequest()
                                 .contentType(APPLICATION_JSON)

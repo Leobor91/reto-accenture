@@ -10,6 +10,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'io.projectreactor.tools:blockhound:1.0.8.RELEASE'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
 
     runtimeOnly 'com.h2database:h2' // TODO: remove this to use real database
     testImplementation 'org.reactivecommons.utils:object-mapper:0.1.0'

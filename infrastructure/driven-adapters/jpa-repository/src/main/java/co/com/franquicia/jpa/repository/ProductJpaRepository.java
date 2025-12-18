@@ -38,9 +38,9 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
     List<TopStockRow> findTopStockByFranchise(@Param("franchiseId") Long franchiseId);
 
     interface TopStockRow {
-        Long getBranchId();
-        String getBranchName();
-        String getProductName();
+        Long getBranch_id();
+        String getBranch_name();
+        String getProduct_name();
         Integer getStock();
     }
 
