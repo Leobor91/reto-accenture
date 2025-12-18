@@ -22,10 +22,9 @@ public class FranchiseRepositoryAdapter implements FranchiseGateway {
     @Override
     @Transactional
     public Mono<Franchise> save(Franchise franchise) {
-        return Mono.fromCallable(() -> {
-            FranchiseEntity saved = repository.save(mapper.toEntity(franchise));
-            return mapper.toModel(saved);
-        }).subscribeOn(Schedulers.boundedElastic());
+        return Mono.fromCallable(() ->  mapper.toModel(repository.save(
+                mapper.toEntity(franchise))))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     @Override
@@ -62,11 +61,4 @@ public class FranchiseRepositoryAdapter implements FranchiseGateway {
         }).subscribeOn(Schedulers.boundedElastic());
     }
 
-    @Override
-    @Transactional
-    public Mono<Void> deleteById(Long id) {
-        return Mono.fromRunnable(() -> repository.deleteById(id))
-                .subscribeOn(Schedulers.boundedElastic())
-                .then();
-    }
 }
