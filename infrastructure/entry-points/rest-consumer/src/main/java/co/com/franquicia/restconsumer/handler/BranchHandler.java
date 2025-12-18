@@ -1,13 +1,11 @@
 package co.com.franquicia.restconsumer.handler;
 
-
-import co.com.franquicia.model.franchise.Franchise;
+import co.com.franquicia.restconsumer.dto.request.BranchRequest;
 import co.com.franquicia.restconsumer.dto.response.ApiResponse;
 import co.com.franquicia.restconsumer.dto.response.ErrorResponse;
-import co.com.franquicia.restconsumer.dto.request.FranchiseRequest;
-import co.com.franquicia.usecase.franchise.CreateFranchiseUseCase;
-import co.com.franquicia.usecase.franchise.GetAllFranchisesUseCase;
-import co.com.franquicia.usecase.franchise.UpdateFranchiseNameUseCase;
+import co.com.franquicia.usecase.branch.CreateBranchUseCase;
+import co.com.franquicia.usecase.branch.GetBranchesByFranchiseUseCase;
+import co.com.franquicia.usecase.branch.UpdateBranchNameUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -21,22 +19,25 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
 @RequiredArgsConstructor
-public class FranchiseHandler {
+public class BranchHandler {
 
-    private final CreateFranchiseUseCase createUseCase;
-    private final UpdateFranchiseNameUseCase updateUseCase;
-    private final GetAllFranchisesUseCase getAllUseCase;
+    private final CreateBranchUseCase createUseCase;
+    private final UpdateBranchNameUseCase updateUseCase;
+    private final GetBranchesByFranchiseUseCase getByFranchiseUseCase;
 
     public Mono<ServerResponse> create(ServerRequest request) {
-        return request.bodyToMono(FranchiseRequest.class)
+        return request.bodyToMono(BranchRequest.class)
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_franquicia es obligatorio y no puede estar vacío ni ser nulo")))
-                .flatMap(req -> createUseCase.execute(req.getName()))
-                .map(franchise -> ApiResponse.builder()
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_sucursal es obligatorio y no puede estar vacío ni ser nulo")))
+                .filter(req -> req.getFranchiseId() != null && !req.getFranchiseId().toString().isBlank())
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("el campo franquicia_id es obligatorio y no puede estar vacío ni ser nulo")))
+                .flatMap(req -> createUseCase.execute(req.getFranchiseId(), req.getName()))
+                .map(branch -> ApiResponse.builder()
                         .status(200)
-                        .message("La franquicia se creó exitosamente.")
-                        .data(franchise)
-                        .build())
+                        .message("La Sucursal se creó exitosamente.")
+                        .data(branch)
+                        .build()
+                )
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
                         .bodyValue(response))
@@ -55,14 +56,14 @@ public class FranchiseHandler {
 
     public Mono<ServerResponse> updateName(ServerRequest request) {
         Long id = Long.valueOf(request.pathVariable("id"));
-        return request.bodyToMono(FranchiseRequest.class)
+        return request.bodyToMono(BranchRequest.class)
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_franquicia es obligatorio y no puede estar vacío ni ser nulo")))
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_sucursal es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> updateUseCase.execute(id, req.getName()))
-                .map(franchise -> ApiResponse.builder()
+                .map(branch -> ApiResponse.builder()
                         .status(200)
-                        .message("La franquicia se Actualizo exitosamente.")
-                        .data(franchise)
+                        .message("La Sucursal se Actualizo exitosamente.")
+                        .data(branch)
                         .build())
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
@@ -80,13 +81,14 @@ public class FranchiseHandler {
                 );
     }
 
-    public Mono<ServerResponse> getAll(ServerRequest request) {
-        return getAllUseCase.execute()
+    public Mono<ServerResponse> getByFranchise(ServerRequest request) {
+        Long franchiseId = Long.valueOf(request.pathVariable("franchiseId"));
+        return getByFranchiseUseCase.execute(franchiseId)
                 .collectList()
-                .map(franchises -> ApiResponse.builder()
+                .map(branches -> ApiResponse.builder()
                         .status(200)
-                        .message("Franquicias obtenidas exitosamente.")
-                        .data(franchises)
+                        .message("Sucursales obtenidas exitosamente.")
+                        .data(branches)
                         .build())
                 .flatMap(response -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)

@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findByBranchId(Long branchId);
+
+    Optional<ProductEntity> findByName(String name);
 
     @Modifying
     @Transactional
@@ -35,9 +38,9 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
     List<TopStockRow> findTopStockByFranchise(@Param("franchiseId") Long franchiseId);
 
     interface TopStockRow {
-        Long getBranchId();
-        String getBranchName();
-        String getProductName();
+        Long getBranch_id();
+        String getBranch_name();
+        String getProduct_name();
         Integer getStock();
     }
 

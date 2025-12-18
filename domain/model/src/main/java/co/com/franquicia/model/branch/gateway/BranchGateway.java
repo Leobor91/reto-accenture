@@ -10,6 +10,6 @@ public interface BranchGateway {
     Mono<Branch> findById(Long id);
     Flux<Branch> findByFranchiseId(Long franchiseId);
     Mono<Branch> updateName(Long id, String newName);
-    Mono<Void> deleteById(Long id);
+    Mono<Branch> findByName(String name);
 
 }
