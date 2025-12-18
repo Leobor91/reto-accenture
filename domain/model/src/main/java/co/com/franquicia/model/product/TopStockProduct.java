@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TopStockProduct {
 
-    private String branchId;
+    private Long branchId;
     private String branchName;
     private String productName;
     private Integer stock;
