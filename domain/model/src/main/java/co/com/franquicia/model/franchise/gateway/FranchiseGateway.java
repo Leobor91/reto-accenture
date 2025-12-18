@@ -11,6 +11,5 @@ public interface FranchiseGateway {
     Mono<Franchise> findByName(String name);
     Flux<Franchise> findAll();
     Mono<Franchise> updateName(Long id, String newName);
-    Mono<Void> deleteById(Long id);
 
 }
