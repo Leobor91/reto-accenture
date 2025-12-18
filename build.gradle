@@ -5,6 +5,7 @@ buildscript {
 		sonarVersion = '4.4.1.3373'
 		jacocoVersion = '0.8.11'
         lombokVersion = '1.18.30'
+        postgresqlVersion = '42.7.1'
 	}
 }
 
