@@ -9,7 +9,7 @@ public interface ProductGateway {
 
     Mono<Product> save(Product product);
     Mono<Product> findById(Long id);
-    Flux<Product> findByBranchId(Long branchId);
+    Mono<Product> findByName(String name);
     Mono<Product> updateStock(Long id, Integer newStock);
     Mono<Product> updateName(Long id, String newName);
     Mono<Void> deleteById(Long id);

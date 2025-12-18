@@ -37,10 +37,10 @@ public class ProductRepositoryAdapter implements ProductGateway {
     }
 
     @Override
-    public Flux<Product> findByBranchId(Long branchId) {
-        return Mono.fromCallable(() -> repository.findByBranchId(branchId))
-                .flatMapMany(Flux::fromIterable)
-                .map(mapper::toModel)
+    public Mono<Product> findByName(String name) {
+        return Mono.fromCallable(() -> repository.findByName(name)
+                        .map(mapper::toModel)
+                        .orElse(null))
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
