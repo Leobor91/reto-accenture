@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: reto-accenture
+    runtime: docker
+    env: docker
+    dockerfilePath: ./Dockerfile
+    region: virginia
+    plan: free
+    healthCheckPath: /actuator/health
+
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      - key: POSTGRES_ADDON_HOST
+        value: ep-calm-mouse-adahx24b-pooler.c-2.us-east-1.aws.neon.tech
+
+      - key: POSTGRES_ADDON_USER
+        value: neondb_owner
+
+      - key: POSTGRES_ADDON_PASSWORD
+        sync: false
+
+      - key: JAVA_OPTS
+        value: "-Xms256m -Xmx512m -XX:+UseG1GC"
+
+    autoDeploy: true
