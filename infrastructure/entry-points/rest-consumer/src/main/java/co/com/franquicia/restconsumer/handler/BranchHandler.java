@@ -1,7 +1,7 @@
 package co.com.franquicia.restconsumer.handler;
 
 import co.com.franquicia.restconsumer.dto.request.BranchRequest;
-import co.com.franquicia.restconsumer.dto.response.ApiResponse;
+import co.com.franquicia.restconsumer.dto.response.ApiResponseDto;
 import co.com.franquicia.restconsumer.dto.response.ErrorResponse;
 import co.com.franquicia.usecase.branch.CreateBranchUseCase;
 import co.com.franquicia.usecase.branch.GetBranchesByFranchiseUseCase;
@@ -32,7 +32,7 @@ public class BranchHandler {
                 .filter(req -> req.getFranchiseId() != null && !req.getFranchiseId().toString().isBlank())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("el campo franquicia_id es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> createUseCase.execute(req.getFranchiseId(), req.getName()))
-                .map(branch -> ApiResponse.builder()
+                .map(branch -> ApiResponseDto.builder()
                         .status(200)
                         .message("La Sucursal se creó exitosamente.")
                         .data(branch)
@@ -60,7 +60,7 @@ public class BranchHandler {
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_sucursal es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> updateUseCase.execute(id, req.getName()))
-                .map(branch -> ApiResponse.builder()
+                .map(branch -> ApiResponseDto.builder()
                         .status(200)
                         .message("La Sucursal se Actualizo exitosamente.")
                         .data(branch)
@@ -85,7 +85,7 @@ public class BranchHandler {
         Long franchiseId = Long.valueOf(request.pathVariable("franchiseId"));
         return getByFranchiseUseCase.execute(franchiseId)
                 .collectList()
-                .map(branches -> ApiResponse.builder()
+                .map(branches -> ApiResponseDto.builder()
                         .status(200)
                         .message("Sucursales obtenidas exitosamente.")
                         .data(branches)

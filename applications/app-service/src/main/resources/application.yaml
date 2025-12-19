@@ -29,3 +29,21 @@ spring:
     level:
       co.com.franquicia: "DEBUG"
       org.springframework.jdbc: "DEBUG"
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    doc-expansion: none
+    filter: true
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
+  show-actuator: false
+  use-management-port: false
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

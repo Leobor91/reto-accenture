@@ -1,8 +1,6 @@
 package co.com.franquicia.restconsumer.handler;
 
-
-import co.com.franquicia.model.franchise.Franchise;
-import co.com.franquicia.restconsumer.dto.response.ApiResponse;
+import co.com.franquicia.restconsumer.dto.response.ApiResponseDto;
 import co.com.franquicia.restconsumer.dto.response.ErrorResponse;
 import co.com.franquicia.restconsumer.dto.request.FranchiseRequest;
 import co.com.franquicia.usecase.franchise.CreateFranchiseUseCase;
@@ -32,7 +30,7 @@ public class FranchiseHandler {
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_franquicia es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> createUseCase.execute(req.getName()))
-                .map(franchise -> ApiResponse.builder()
+                .map(franchise -> ApiResponseDto.builder()
                         .status(200)
                         .message("La franquicia se creó exitosamente.")
                         .data(franchise)
@@ -59,7 +57,7 @@ public class FranchiseHandler {
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_franquicia es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> updateUseCase.execute(id, req.getName()))
-                .map(franchise -> ApiResponse.builder()
+                .map(franchise -> ApiResponseDto.builder()
                         .status(200)
                         .message("La franquicia se Actualizo exitosamente.")
                         .data(franchise)
@@ -83,7 +81,7 @@ public class FranchiseHandler {
     public Mono<ServerResponse> getAll(ServerRequest request) {
         return getAllUseCase.execute()
                 .collectList()
-                .map(franchises -> ApiResponse.builder()
+                .map(franchises -> ApiResponseDto.builder()
                         .status(200)
                         .message("Franquicias obtenidas exitosamente.")
                         .data(franchises)
