@@ -6,11 +6,18 @@ spring:
   devtools:
     add-properties: false
   datasource:
-    url: "jdbc:postgresql://ep-billowing-bird-adeka19q-pooler.c-2.us-east-1.aws.neon.tech:5432/neondb?sslmode=require&channelBinding=require"
-    username: "neondb_owner"
-    password: "npg_VChQpJ3rG1FH"
+    url: "jdbc:postgresql://${POSTGRES_ADDON_HOST}:5432/neondb?sslmode=require&channelBinding=require"
+    username: ${POSTGRES_ADDON_USER}
+    password: ${POSTGRES_ADDON_PASSWORD}
     driver-class-name: "org.postgresql.Driver"
+  sql:
+    init:
+      mode: always
   jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
     databasePlatform: "org.hibernate.dialect.PostgreSQLDialect"
     hikari:
       maximum-pool-size: 20
