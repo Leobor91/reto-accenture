@@ -1,7 +1,7 @@
 package co.com.franquicia.restconsumer.handler;
 
 import co.com.franquicia.restconsumer.dto.request.ProductRequest;
-import co.com.franquicia.restconsumer.dto.response.ApiResponse;
+import co.com.franquicia.restconsumer.dto.response.ApiResponseDto;
 import co.com.franquicia.restconsumer.dto.response.ErrorResponse;
 import co.com.franquicia.usecase.product.CreateProductUseCase;
 import co.com.franquicia.usecase.product.DeleteProductUseCase;
@@ -42,7 +42,7 @@ public class ProductHandler {
                         req.getName(),
                         req.getStock()
                 ))
-                .map(product -> ApiResponse.builder()
+                .map(product -> ApiResponseDto.builder()
                         .status(200)
                         .message("El Producto se creó exitosamente.")
                         .data(product)
@@ -69,7 +69,7 @@ public class ProductHandler {
                 .filter(req -> req.getStock() != null && !req.getStock().toString().isBlank() && req.getStock() >= 0)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo stock_producto es obligatorio y no puede estar vacío ni ser nulo y mayor que 0")))
                 .flatMap(req -> updateStockUseCase.execute(id, req.getStock()))
-                .map(product -> ApiResponse.builder()
+                .map(product -> ApiResponseDto.builder()
                         .status(200)
                         .message("El Stock se Actualizo exitosamente.")
                         .data(product)
@@ -96,7 +96,7 @@ public class ProductHandler {
                 .filter(req -> req.getName() != null && !req.getName().isBlank())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("El campo nombre_producto es obligatorio y no puede estar vacío ni ser nulo")))
                 .flatMap(req -> updateNameUseCase.execute(id, req.getName()))
-                .map(product -> ApiResponse.builder()
+                .map(product -> ApiResponseDto.builder()
                         .status(200)
                         .message("El Nombre del producto se Actualizo exitosamente.")
                         .data(product)
@@ -122,7 +122,7 @@ public class ProductHandler {
         return deleteUseCase.execute(id)
                 .then(ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
-                        .bodyValue(ApiResponse.builder()
+                        .bodyValue(ApiResponseDto.builder()
                                 .status(200)
                                 .message("Producto eliminado exitosamente.")
                                 .build()))
@@ -145,7 +145,7 @@ public class ProductHandler {
                 .collectList()
                 .filter(topStockProducts -> !topStockProducts.isEmpty() && topStockProducts.size() > 0)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("No se encontraron productos con stock")))
-                .map(topStockProducts -> ApiResponse.builder()
+                .map(topStockProducts -> ApiResponseDto.builder()
                         .status(200)
                         .message("Top de productos con mayor stock por franquicia obtenido exitosamente.")
                         .data(topStockProducts)
